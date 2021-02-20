@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "watch": "tsc -w",
-    "serve": "nodemon dist/index.js",
+    "serve": "concurrently \"nodemon dist/index.js\" \"redis-server\"",
     "dev": "concurrently --kill-others \"yarn watch\" \"yarn serve\"",
     "start": "node dist/index.js",
     "ts-start": "ts-node src/index.ts",
