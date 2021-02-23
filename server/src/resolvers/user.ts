@@ -1,7 +1,8 @@
 import { Resolver, Query, Mutation, InputType, ObjectType, Field, Arg, Ctx } from 'type-graphql';
-import argon2 from 'argon2'
+import argon2 from 'argon2';
+import { EntityManager } from '@mikro-orm/postgresql';
 
-import { User } from '../entities/User'
+import { User } from '../entities/User';
 import { MyContext } from '../types';
 
 @InputType()
@@ -78,20 +79,25 @@ export class UserResolver {
       }
     }
 
-    const hashedPassword = await argon2.hash(options.password);
-    const user = em.create(
-      User,
-      {
-        username: options.username,
-        password: hashedPassword
-      }
-    );
-
+    let user;
     try {
-      await em.persistAndFlush(user);
+      const hashedPassword = await argon2.hash(options.password);
+      const result = await (em as EntityManager)
+        .createQueryBuilder(User)
+        .getKnexQuery()
+        .insert({
+          username: options.username,
+          password: hashedPassword,
+          created_at: new Date(),
+          updated_at: new Date()
+        })
+        .returning('*');
+
+      user = result[0];
 
     } catch(err) {
-      if (err.code === '23505' || err.detail.includes('already exists')) {
+      console.log(err);
+      if (err.detail.includes('already exists')) {
         return {
           errors: [
             {
