@@ -36,14 +36,14 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
   } else {
     body = (
       <Flex>
-        <Box mr={2}>{ data.me.username }</Box>
-        <Button variant="link">Logout</Button>
+        <Box color="black" mr={2}>{ data.me.username }</Box>
+        <Button color="black" variant="link">Logout</Button>
       </Flex>
     );
   }
 
   return (
-    <Flex bg="tomato" p={ 4 }>
+    <Flex bg="tan" p={ 4 }>
       <Box ml={'auto'}>
         { body }
       </Box>

@@ -44,10 +44,6 @@ export class UserResolver {
   ) {
     const { userId } = req.session;
 
-    console.log('===============================');
-    console.log('ME');
-    console.log(userId);
-
     if (!userId) {
       return null;
     }
